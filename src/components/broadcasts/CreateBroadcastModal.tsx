@@ -184,7 +184,25 @@ export default function CreateBroadcastModal({
           ),
     );
   }
+ function convertLocalDateTimeToUtc(
+  value: string,
+) {
+  if (!value) {
+    return undefined;
+  }
 
+  const localDate = new Date(value);
+
+  if (Number.isNaN(localDate.getTime())) {
+    throw new Error(
+      'Invalid scheduled date and time.',
+    );
+  }
+
+  return localDate.toISOString();
+}
+const normalizedScheduledAt =
+  convertLocalDateTimeToUtc(scheduledAt);
   async function handleCreate() {
     if (selectedIds.length === 0) {
       setError(
@@ -232,7 +250,7 @@ export default function CreateBroadcastModal({
           .split(/\r?\n/)
           .map((item) => item.trim())
           .filter(Boolean);
-
+      
       const broadcast =
         await createBroadcast({
           type,
@@ -253,8 +271,7 @@ export default function CreateBroadcastModal({
               ? parameters
               : undefined,
           segment: 'CUSTOM',
-          scheduledAt:
-            scheduledAt || undefined,
+          scheduledAt:normalizedScheduledAt,
         });
 
       await addBroadcastRecipients(
