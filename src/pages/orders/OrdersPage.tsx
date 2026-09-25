@@ -634,7 +634,7 @@ export default function OrdersPage() {
                         >
                           {customer.name ||
                             'Unnamed customer'}{' '}
-                          — {customer.phoneNumber}
+                          ï¿½ {customer.phoneNumber}
                         </option>
                       ),
                     )}
