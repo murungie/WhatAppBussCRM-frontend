@@ -11,6 +11,11 @@ import ProtectedRoute from './auth/ProtectedRoute';
 import AppLayout from './layouts/AppLayout';
 
 import LoginPage from './pages/auth/LoginPage';
+import RegisterPage from './pages/auth/RegisterPage';
+
+import OnboardingPage from './pages/onboarding/OnboardingPage';
+import WhatsAppOnboardingPage from './pages/onboarding/WhatsAppOnboardingPage';
+
 import DashboardPage from './pages/dashboard/DashboardPage';
 import InboxPage from './pages/inbox/InboxPage';
 import CustomersPage from './pages/customers/CustomersPage';
@@ -24,13 +29,33 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+
           <Route
             path="/login"
             element={<LoginPage />}
           />
 
+          <Route
+            path="/register"
+            element={<RegisterPage />}
+          />
+
           <Route element={<ProtectedRoute />}>
+
+            <Route
+              path="/onboarding"
+              element={<OnboardingPage />}
+            />
+
+            <Route
+              path="/onboarding/whatsapp"
+              element={
+                <WhatsAppOnboardingPage />
+              }
+            />
+
             <Route element={<AppLayout />}>
+
               <Route
                 path="/dashboard"
                 element={<DashboardPage />}
@@ -55,17 +80,20 @@ function App() {
                 path="/auto-replies"
                 element={<AutoRepliesPage />}
               />
+
             </Route>
 
             <Route
               path="/orders"
               element={<OrdersPage />}
-             />
+            />
+
+            <Route
+              path="/settings"
+              element={<SettingsPage />}
+            />
+
           </Route>
-          <Route
-            path="/settings"
-            element={<SettingsPage />}
-          />
 
           <Route
             path="*"
@@ -76,6 +104,7 @@ function App() {
               />
             }
           />
+
         </Routes>
       </BrowserRouter>
     </AuthProvider>
@@ -83,8 +112,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-

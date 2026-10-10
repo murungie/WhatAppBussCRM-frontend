@@ -6,10 +6,17 @@ import {
   type ReactNode,
 } from 'react';
 
+import type { AuthUser } from './auth.types';
+
 interface AuthContextValue {
   token: string | null;
+  user: AuthUser | null;
   isAuthenticated: boolean;
-  login: (token: string) => void;
+  login: (
+    token: string,
+    user?: AuthUser | null,
+  ) => void;
+  setUser: (user: AuthUser | null) => void;
   logout: () => void;
 }
 
@@ -37,13 +44,66 @@ export function AuthProvider({
         ),
     );
 
-  const login = (newToken: string) => {
+  const [user, setUserState] =
+    useState<AuthUser | null>(() => {
+      const storedUser =
+        localStorage.getItem(
+          USER_KEY,
+        );
+
+      if (!storedUser) {
+        return null;
+      }
+
+      try {
+        return JSON.parse(
+          storedUser,
+        ) as AuthUser;
+      } catch {
+        localStorage.removeItem(
+          USER_KEY,
+        );
+
+        return null;
+      }
+    });
+
+  const login = (
+    newToken: string,
+    newUser?: AuthUser | null,
+  ) => {
     localStorage.setItem(
       TOKEN_KEY,
       newToken,
     );
 
     setToken(newToken);
+
+    if (newUser) {
+      localStorage.setItem(
+        USER_KEY,
+        JSON.stringify(newUser),
+      );
+
+      setUserState(newUser);
+    }
+  };
+
+  const setUser = (
+    newUser: AuthUser | null,
+  ) => {
+    if (newUser) {
+      localStorage.setItem(
+        USER_KEY,
+        JSON.stringify(newUser),
+      );
+    } else {
+      localStorage.removeItem(
+        USER_KEY,
+      );
+    }
+
+    setUserState(newUser);
   };
 
   const logout = () => {
@@ -56,16 +116,20 @@ export function AuthProvider({
     );
 
     setToken(null);
+    setUserState(null);
   };
 
   const value = useMemo(
     () => ({
       token,
-      isAuthenticated: Boolean(token),
+      user,
+      isAuthenticated:
+        Boolean(token),
       login,
+      setUser,
       logout,
     }),
-    [token],
+    [token, user],
   );
 
   return (

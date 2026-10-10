@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { login } from '../../api/auth';
 import { useAuth } from '../../auth/AuthContext';
+import { Link } from 'react-router-dom';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -138,6 +139,17 @@ export default function LoginPage() {
               ? 'Signing in...'
               : 'Sign in'}
           </button>
+
+          <p className="mt-6 text-center text-sm text-gray-600">
+  Don't have an account?{' '}
+
+  <Link
+    to="/register"
+    className="font-medium text-black hover:underline"
+  >
+    Create an account
+  </Link>
+</p>
         </form>
       </div>
     </div>
